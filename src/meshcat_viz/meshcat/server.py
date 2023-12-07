@@ -89,7 +89,14 @@ class MeshCatServer(ZMQWebSocketBridge):
         # inherits from upstream by just extending ZMQWebSocketBridge.handle_zmq().
 
         # Need -u for unbuffered output: https://stackoverflow.com/a/25572491
-        args = [sys.executable, "-u", "-m", "meshcat_viz.meshcat"]
+        args = [
+            result := subprocess.run(
+                ["which", "python"], stdout=subprocess.PIPE, text=True
+            ).stdout.strip(),
+            "-u",
+            "-m",
+            "meshcat_viz.meshcat",
+        ]
         if zmq_url is not None:
             args.append("--zmq-url")
             args.append(zmq_url)
