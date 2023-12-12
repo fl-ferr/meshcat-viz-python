@@ -1,0 +1,19 @@
+diff --git a/src/meshcat/servers/zmqserver.py b/src/meshcat/servers/zmqserver.py
+--- a/src/meshcat/servers/zmqserver.py
++++ b/src/meshcat/servers/zmqserver.py
+@@ -41,7 +44,14 @@ def start_zmq_server_as_subprocess(zmq_url=None, server_args=[]):
+         zmq_url
+     """
+     # Need -u for unbuffered output: https://stackoverflow.com/a/25572491
+-    args = [sys.executable, "-u", "-m", "meshcat.servers.zmqserver"]
++    args = [
++        result := subprocess.run(
++            ["which", "python"], stdout=subprocess.PIPE, text=True
++        ).stdout.strip(),
++        "-u",
++        "-m",
++        "meshcat.servers.zmqserver",
++    ]
+     if zmq_url is not None:
+         args.append("--zmq-url")
+         args.append(zmq_url)
